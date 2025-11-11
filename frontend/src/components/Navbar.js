@@ -1,6 +1,6 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -12,7 +12,7 @@ import {
   MenuItem,
   Avatar,
   Chip,
-} from '@mui/material';
+} from "@mui/material";
 import {
   AccountCircle,
   SportsSoccer,
@@ -20,8 +20,8 @@ import {
   Logout,
   Person,
   AdminPanelSettings,
-} from '@mui/icons-material';
-import { logout } from '../redux/slices/authSlice';
+} from "@mui/icons-material";
+import { logout } from "../redux/slices/authSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -46,12 +46,12 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/');
+    navigate("/");
     handleMenuClose();
   };
 
-  const menuId = 'primary-search-account-menu';
-  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const menuId = "primary-search-account-menu";
+  const mobileMenuId = "primary-search-account-menu-mobile";
 
   return (
     <AppBar position="static" elevation={1}>
@@ -63,9 +63,9 @@ const Navbar = () => {
           component={Link}
           to="/"
           sx={{
-            textDecoration: 'none',
-            color: 'inherit',
-            fontWeight: 'bold',
+            textDecoration: "none",
+            color: "inherit",
+            fontWeight: "bold",
             flexGrow: 1,
           }}
         >
@@ -73,7 +73,7 @@ const Navbar = () => {
         </Typography>
 
         {/* Desktop Navigation */}
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+        <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}>
           <Button color="inherit" component={Link} to="/events">
             Events
           </Button>
@@ -84,7 +84,7 @@ const Navbar = () => {
                 My Tickets
               </Button>
 
-              {user?.role === 'admin' && (
+              {user?.role === "admin" && (
                 <Button color="inherit" component={Link} to="/admin">
                   Admin
                 </Button>
@@ -110,7 +110,12 @@ const Navbar = () => {
               <Button color="inherit" component={Link} to="/login">
                 Login
               </Button>
-              <Button variant="outlined" color="inherit" component={Link} to="/register">
+              <Button
+                variant="outlined"
+                color="inherit"
+                component={Link}
+                to="/register"
+              >
                 Register
               </Button>
             </>
@@ -118,7 +123,7 @@ const Navbar = () => {
         </Box>
 
         {/* Mobile Navigation */}
-        <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+        <Box sx={{ display: { xs: "flex", md: "none" } }}>
           <IconButton
             size="large"
             aria-label="show more"
@@ -136,14 +141,14 @@ const Navbar = () => {
       <Menu
         anchorEl={anchorEl}
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: "top",
+          horizontal: "right",
         }}
         id={menuId}
         keepMounted
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: "top",
+          horizontal: "right",
         }}
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
@@ -152,7 +157,7 @@ const Navbar = () => {
           <Person sx={{ mr: 1 }} />
           Profile
         </MenuItem>
-        {user?.role === 'admin' && (
+        {user?.role === "admin" && (
           <MenuItem component={Link} to="/admin" onClick={handleMenuClose}>
             <AdminPanelSettings sx={{ mr: 1 }} />
             Admin Dashboard
@@ -168,14 +173,14 @@ const Navbar = () => {
       <Menu
         anchorEl={mobileAnchorEl}
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: "top",
+          horizontal: "right",
         }}
         id={mobileMenuId}
         keepMounted
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: "top",
+          horizontal: "right",
         }}
         open={Boolean(mobileAnchorEl)}
         onClose={handleMenuClose}
@@ -192,7 +197,7 @@ const Navbar = () => {
             <MenuItem component={Link} to="/profile" onClick={handleMenuClose}>
               Profile
             </MenuItem>
-            {user?.role === 'admin' && (
+            {user?.role === "admin" && (
               <MenuItem component={Link} to="/admin" onClick={handleMenuClose}>
                 Admin Dashboard
               </MenuItem>
@@ -216,11 +221,11 @@ const Navbar = () => {
 
       {/* Loyalty Points Display */}
       {user && (
-        <Box sx={{ position: 'absolute', top: 8, right: 16 }}>
+        <Box sx={{ position: "absolute", top: 8, right: 16 }}>
           <Chip
             label={`${user.loyaltyPoints} pts`}
             size="small"
-            color={user.loyaltyTier === 'platinum' ? 'primary' : 'default'}
+            color={user.loyaltyTier === "platinum" ? "primary" : "default"}
             variant="outlined"
           />
         </Box>
