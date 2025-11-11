@@ -1,81 +1,93 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Name is required'],
-    trim: true,
-    maxlength: [50, 'Name cannot exceed 50 characters']
-  },
-  email: {
-    type: String,
-    required: [true, 'Email is required'],
-    unique: true,
-    lowercase: true,
-    validate: {
-      validator: function(email) {
-        return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
-      },
-      message: 'Please enter a valid email'
-    }
-  },
-  password: {
-    type: String,
-    required: [true, 'Password is required'],
-    minlength: [6, 'Password must be at least 6 characters'],
-    select: false
-  },
-  role: {
-    type: String,
-    enum: ['fan', 'admin'],
-    default: 'fan'
-  },
-  phone: {
-    type: String,
-    trim: true
-  },
-  dateOfBirth: {
-    type: Date
-  },
-  loyaltyPoints: {
-    type: Number,
-    default: 0
-  },
-  loyaltyTier: {
-    type: String,
-    enum: ['bronze', 'silver', 'gold', 'platinum'],
-    default: 'bronze'
-  },
-  preferences: {
-    favoriteSports: [{
+const userSchema = new mongoose.Schema(
+  {
+    name: {
       type: String,
-      enum: ['football', 'cricket', 'basketball', 'baseball', 'soccer', 'tennis']
-    }],
-    notifications: {
-      email: { type: Boolean, default: true },
-      sms: { type: Boolean, default: false },
-      gameReminders: { type: Boolean, default: true }
-    }
+      required: [true, "Name is required"],
+      trim: true,
+      maxlength: [50, "Name cannot exceed 50 characters"],
+    },
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
+      lowercase: true,
+      validate: {
+        validator: function (email) {
+          return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
+        },
+        message: "Please enter a valid email",
+      },
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+      minlength: [6, "Password must be at least 6 characters"],
+      select: false,
+    },
+    role: {
+      type: String,
+      enum: ["fan", "admin"],
+      default: "fan",
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    dateOfBirth: {
+      type: Date,
+    },
+    loyaltyPoints: {
+      type: Number,
+      default: 0,
+    },
+    loyaltyTier: {
+      type: String,
+      enum: ["bronze", "silver", "gold", "platinum"],
+      default: "bronze",
+    },
+    preferences: {
+      favoriteSports: [
+        {
+          type: String,
+          enum: [
+            "football",
+            "cricket",
+            "basketball",
+            "baseball",
+            "soccer",
+            "tennis",
+          ],
+        },
+      ],
+      notifications: {
+        email: { type: Boolean, default: true },
+        sms: { type: Boolean, default: false },
+        gameReminders: { type: Boolean, default: true },
+      },
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    lastLogin: {
+      type: Date,
+    },
   },
-  isActive: {
-    type: Boolean,
-    default: true
-  },
-  lastLogin: {
-    type: Date
+  {
+    timestamps: true,
   }
-}, {
-  timestamps: true
-});
+);
 
 // Index for better query performance
 userSchema.index({ email: 1 });
 userSchema.index({ loyaltyPoints: -1 });
 
 // Hash password before saving
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
 
   try {
     const salt = await bcrypt.genSalt(12);
@@ -87,21 +99,21 @@ userSchema.pre('save', async function(next) {
 });
 
 // Compare password method
-userSchema.methods.comparePassword = async function(candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
 // Update loyalty tier based on points
-userSchema.methods.updateLoyaltyTier = function() {
+userSchema.methods.updateLoyaltyTier = function () {
   if (this.loyaltyPoints >= 10000) {
-    this.loyaltyTier = 'platinum';
+    this.loyaltyTier = "platinum";
   } else if (this.loyaltyPoints >= 5000) {
-    this.loyaltyTier = 'gold';
+    this.loyaltyTier = "gold";
   } else if (this.loyaltyPoints >= 2000) {
-    this.loyaltyTier = 'silver';
+    this.loyaltyTier = "silver";
   } else {
-    this.loyaltyTier = 'bronze';
+    this.loyaltyTier = "bronze";
   }
 };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);
