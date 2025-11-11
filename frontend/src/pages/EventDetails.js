@@ -208,7 +208,7 @@ const EventDetails = () => {
             <Grid item xs={12} md={4}>
               <Card sx={{ p: 2, textAlign: "center" }}>
                 <Typography variant="h4" color="primary" sx={{ mb: 1 }}>
-                  From $
+                  From ₹
                   {Math.min(
                     ...currentEvent.ticketCategories.map((cat) => cat.price)
                   )}
@@ -314,7 +314,7 @@ const EventDetails = () => {
                                 {key}
                               </Typography>
                               <Typography variant="h6" color="primary">
-                                ${category.price}
+                                ₹{category.price}
                               </Typography>
                             </Box>
                           }
@@ -400,7 +400,7 @@ const EventDetails = () => {
                               </Typography>
                             </Box>
                             <Typography variant="h6" color="primary">
-                              ${category.price}
+                              ₹{category.price}
                             </Typography>
                           </Box>
                         }
@@ -443,14 +443,14 @@ const EventDetails = () => {
                     {quantity > 1 ? "s" : ""}
                   </Typography>
                   <Typography>
-                    ${selectedCategoryData.price * quantity}
+                    ₹{selectedCategoryData.price * quantity}
                   </Typography>
                 </Box>
                 <Divider sx={{ my: 1 }} />
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Typography variant="h6">Total</Typography>
                   <Typography variant="h6" color="primary">
-                    ${selectedCategoryData.price * quantity}
+                    ₹{selectedCategoryData.price * quantity}
                   </Typography>
                 </Box>
               </Box>

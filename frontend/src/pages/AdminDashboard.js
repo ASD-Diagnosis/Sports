@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Container,
   Typography,
@@ -27,7 +27,7 @@ import {
   DialogActions,
   TextField,
   MenuItem,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Event,
   People,
@@ -37,24 +37,32 @@ import {
   Edit,
   Delete,
   SportsSoccer,
-} from '@mui/icons-material';
-import { getEvents, createEvent, updateEvent, deleteEvent, reset } from '../redux/slices/eventSlice';
+} from "@mui/icons-material";
+import {
+  getEvents,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  reset,
+} from "../redux/slices/eventSlice";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [eventDialog, setEventDialog] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const [eventForm, setEventForm] = useState({
-    title: '',
-    sport: '',
-    date: '',
-    venue: '',
-    description: '',
-    ticketCategories: [{ type: 'bleachers', price: 0, totalSeats: 100 }],
+    title: "",
+    sport: "",
+    date: "",
+    venue: "",
+    description: "",
+    ticketCategories: [{ type: "bleachers", price: 0, totalSeats: 100 }],
   });
 
   const dispatch = useDispatch();
-  const { events, isLoading, isError, message } = useSelector((state) => state.events);
+  const { events, isLoading, isError, message } = useSelector(
+    (state) => state.events
+  );
 
   useEffect(() => {
     dispatch(getEvents({ limit: 50 })); // Get all events for admin
@@ -71,12 +79,12 @@ const AdminDashboard = () => {
   const handleCreateEvent = () => {
     setEditingEvent(null);
     setEventForm({
-      title: '',
-      sport: '',
-      date: '',
-      venue: '',
-      description: '',
-      ticketCategories: [{ type: 'bleachers', price: 0, totalSeats: 100 }],
+      title: "",
+      sport: "",
+      date: "",
+      venue: "",
+      description: "",
+      ticketCategories: [{ type: "bleachers", price: 0, totalSeats: 100 }],
     });
     setEventDialog(true);
   };
@@ -95,7 +103,7 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteEvent = (eventId) => {
-    if (window.confirm('Are you sure you want to delete this event?')) {
+    if (window.confirm("Are you sure you want to delete this event?")) {
       dispatch(deleteEvent(eventId));
     }
   };
@@ -128,12 +136,17 @@ const AdminDashboard = () => {
   const addCategory = () => {
     setEventForm({
       ...eventForm,
-      ticketCategories: [...eventForm.ticketCategories, { type: 'vip', price: 0, totalSeats: 50 }],
+      ticketCategories: [
+        ...eventForm.ticketCategories,
+        { type: "vip", price: 0, totalSeats: 50 },
+      ],
     });
   };
 
   const removeCategory = (index) => {
-    const updatedCategories = eventForm.ticketCategories.filter((_, i) => i !== index);
+    const updatedCategories = eventForm.ticketCategories.filter(
+      (_, i) => i !== index
+    );
     setEventForm({
       ...eventForm,
       ticketCategories: updatedCategories,
@@ -142,32 +155,39 @@ const AdminDashboard = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'upcoming':
-        return 'success';
-      case 'ongoing':
-        return 'warning';
-      case 'completed':
-        return 'default';
+      case "upcoming":
+        return "success";
+      case "ongoing":
+        return "warning";
+      case "completed":
+        return "default";
       default:
-        return 'default';
+        return "default";
     }
   };
 
   // Mock statistics - in a real app, these would come from an API
   const stats = {
     totalEvents: events.length,
-    totalTickets: events.reduce((sum, event) => sum + event.totalTicketsSold || 0, 0),
-    totalRevenue: events.reduce((sum, event) => sum + (event.totalRevenue || 0), 0),
-    upcomingEvents: events.filter(event => event.status === 'upcoming').length,
+    totalTickets: events.reduce(
+      (sum, event) => sum + event.totalTicketsSold || 0,
+      0
+    ),
+    totalRevenue: events.reduce(
+      (sum, event) => sum + (event.totalRevenue || 0),
+      0
+    ),
+    upcomingEvents: events.filter((event) => event.status === "upcoming")
+      .length,
   };
 
   return (
@@ -182,8 +202,8 @@ const AdminDashboard = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Card>
               <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar sx={{ mr: 2, bgcolor: 'primary.main' }}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Avatar sx={{ mr: 2, bgcolor: "primary.main" }}>
                     <Event />
                   </Avatar>
                   <Box>
@@ -200,8 +220,8 @@ const AdminDashboard = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Card>
               <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar sx={{ mr: 2, bgcolor: 'success.main' }}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Avatar sx={{ mr: 2, bgcolor: "success.main" }}>
                     <ConfirmationNumber />
                   </Avatar>
                   <Box>
@@ -218,12 +238,12 @@ const AdminDashboard = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Card>
               <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar sx={{ mr: 2, bgcolor: 'warning.main' }}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Avatar sx={{ mr: 2, bgcolor: "warning.main" }}>
                     <TrendingUp />
                   </Avatar>
                   <Box>
-                    <Typography variant="h4">${stats.totalRevenue}</Typography>
+                    <Typography variant="h4">₹{stats.totalRevenue}</Typography>
                     <Typography variant="body2" color="text.secondary">
                       Total Revenue
                     </Typography>
@@ -236,8 +256,8 @@ const AdminDashboard = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Card>
               <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar sx={{ mr: 2, bgcolor: 'info.main' }}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Avatar sx={{ mr: 2, bgcolor: "info.main" }}>
                     <People />
                   </Avatar>
                   <Box>
@@ -253,7 +273,7 @@ const AdminDashboard = () => {
         </Grid>
 
         {/* Tabs */}
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
           <Tabs value={activeTab} onChange={handleTabChange}>
             <Tab label="Events Management" />
             <Tab label="Sales Analytics" />
@@ -263,9 +283,20 @@ const AdminDashboard = () => {
         {/* Events Management Tab */}
         {activeTab === 0 && (
           <Box>
-            <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box
+              sx={{
+                mb: 3,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <Typography variant="h5">Events Management</Typography>
-              <Button variant="contained" startIcon={<Add />} onClick={handleCreateEvent}>
+              <Button
+                variant="contained"
+                startIcon={<Add />}
+                onClick={handleCreateEvent}
+              >
                 Create Event
               </Button>
             </Box>
@@ -298,11 +329,15 @@ const AdminDashboard = () => {
                     {events.map((event) => (
                       <TableRow key={event._id}>
                         <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
                             <Avatar sx={{ mr: 2, width: 32, height: 32 }}>
                               <SportsSoccer fontSize="small" />
                             </Avatar>
-                            <Typography variant="body2" noWrap sx={{ maxWidth: 150 }}>
+                            <Typography
+                              variant="body2"
+                              noWrap
+                              sx={{ maxWidth: 150 }}
+                            >
                               {event.title}
                             </Typography>
                           </Box>
@@ -314,11 +349,11 @@ const AdminDashboard = () => {
                             label={event.status}
                             size="small"
                             color={getStatusColor(event.status)}
-                            sx={{ textTransform: 'capitalize' }}
+                            sx={{ textTransform: "capitalize" }}
                           />
                         </TableCell>
                         <TableCell>{event.totalTicketsSold || 0}</TableCell>
-                        <TableCell>${event.totalRevenue || 0}</TableCell>
+                        <TableCell>₹{event.totalRevenue || 0}</TableCell>
                         <TableCell>
                           <Button
                             size="small"
@@ -351,15 +386,21 @@ const AdminDashboard = () => {
               Sales Analytics
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Detailed sales analytics and reporting features would be implemented here.
+              Detailed sales analytics and reporting features would be
+              implemented here.
             </Typography>
           </Box>
         )}
 
         {/* Event Dialog */}
-        <Dialog open={eventDialog} onClose={() => setEventDialog(false)} maxWidth="md" fullWidth>
+        <Dialog
+          open={eventDialog}
+          onClose={() => setEventDialog(false)}
+          maxWidth="md"
+          fullWidth
+        >
           <DialogTitle>
-            {editingEvent ? 'Edit Event' : 'Create New Event'}
+            {editingEvent ? "Edit Event" : "Create New Event"}
           </DialogTitle>
           <DialogContent>
             <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -368,7 +409,7 @@ const AdminDashboard = () => {
                   fullWidth
                   label="Event Title"
                   value={eventForm.title}
-                  onChange={(e) => handleFormChange('title', e.target.value)}
+                  onChange={(e) => handleFormChange("title", e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -377,7 +418,7 @@ const AdminDashboard = () => {
                   select
                   label="Sport"
                   value={eventForm.sport}
-                  onChange={(e) => handleFormChange('sport', e.target.value)}
+                  onChange={(e) => handleFormChange("sport", e.target.value)}
                 >
                   <MenuItem value="football">Football</MenuItem>
                   <MenuItem value="cricket">Cricket</MenuItem>
@@ -393,7 +434,7 @@ const AdminDashboard = () => {
                   label="Date & Time"
                   type="datetime-local"
                   value={eventForm.date}
-                  onChange={(e) => handleFormChange('date', e.target.value)}
+                  onChange={(e) => handleFormChange("date", e.target.value)}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -404,7 +445,7 @@ const AdminDashboard = () => {
                   fullWidth
                   label="Venue"
                   value={eventForm.venue}
-                  onChange={(e) => handleFormChange('venue', e.target.value)}
+                  onChange={(e) => handleFormChange("venue", e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -414,7 +455,9 @@ const AdminDashboard = () => {
                   rows={3}
                   label="Description"
                   value={eventForm.description}
-                  onChange={(e) => handleFormChange('description', e.target.value)}
+                  onChange={(e) =>
+                    handleFormChange("description", e.target.value)
+                  }
                 />
               </Grid>
 
@@ -424,7 +467,15 @@ const AdminDashboard = () => {
                   Ticket Categories
                 </Typography>
                 {eventForm.ticketCategories.map((category, index) => (
-                  <Box key={index} sx={{ mb: 2, p: 2, border: '1px solid #ddd', borderRadius: 1 }}>
+                  <Box
+                    key={index}
+                    sx={{
+                      mb: 2,
+                      p: 2,
+                      border: "1px solid #ddd",
+                      borderRadius: 1,
+                    }}
+                  >
                     <Grid container spacing={2} alignItems="center">
                       <Grid item xs={12} sm={3}>
                         <TextField
@@ -432,7 +483,9 @@ const AdminDashboard = () => {
                           select
                           label="Type"
                           value={category.type}
-                          onChange={(e) => handleCategoryChange(index, 'type', e.target.value)}
+                          onChange={(e) =>
+                            handleCategoryChange(index, "type", e.target.value)
+                          }
                         >
                           <MenuItem value="bleachers">Bleachers</MenuItem>
                           <MenuItem value="vip">VIP</MenuItem>
@@ -446,7 +499,13 @@ const AdminDashboard = () => {
                           label="Price"
                           type="number"
                           value={category.price}
-                          onChange={(e) => handleCategoryChange(index, 'price', parseFloat(e.target.value))}
+                          onChange={(e) =>
+                            handleCategoryChange(
+                              index,
+                              "price",
+                              parseFloat(e.target.value)
+                            )
+                          }
                         />
                       </Grid>
                       <Grid item xs={12} sm={3}>
@@ -455,7 +514,13 @@ const AdminDashboard = () => {
                           label="Total Seats"
                           type="number"
                           value={category.totalSeats}
-                          onChange={(e) => handleCategoryChange(index, 'totalSeats', parseInt(e.target.value))}
+                          onChange={(e) =>
+                            handleCategoryChange(
+                              index,
+                              "totalSeats",
+                              parseInt(e.target.value)
+                            )
+                          }
                         />
                       </Grid>
                       <Grid item xs={12} sm={3}>
@@ -477,7 +542,7 @@ const AdminDashboard = () => {
           <DialogActions>
             <Button onClick={() => setEventDialog(false)}>Cancel</Button>
             <Button onClick={handleEventSubmit} variant="contained">
-              {editingEvent ? 'Update Event' : 'Create Event'}
+              {editingEvent ? "Update Event" : "Create Event"}
             </Button>
           </DialogActions>
         </Dialog>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Box,
   Container,
@@ -19,7 +19,7 @@ import {
   DialogContent,
   DialogActions,
   QRCode,
-} from '@mui/material';
+} from "@mui/material";
 import {
   ConfirmationNumber,
   Event,
@@ -28,8 +28,12 @@ import {
   Cancel,
   QrCode,
   Download,
-} from '@mui/icons-material';
-import { getUserTickets, cancelTicket, reset } from '../redux/slices/ticketSlice';
+} from "@mui/icons-material";
+import {
+  getUserTickets,
+  cancelTicket,
+  reset,
+} from "../redux/slices/ticketSlice";
 
 const Tickets = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -51,7 +55,7 @@ const Tickets = () => {
   }, [dispatch, activeTab]);
 
   const getStatusFilter = (tabIndex) => {
-    const filters = ['', 'active', 'used', 'cancelled'];
+    const filters = ["", "active", "used", "cancelled"];
     return filters[tabIndex];
   };
 
@@ -79,32 +83,32 @@ const Tickets = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'active':
-        return 'success';
-      case 'used':
-        return 'default';
-      case 'cancelled':
-        return 'error';
+      case "active":
+        return "success";
+      case "used":
+        return "default";
+      case "cancelled":
+        return "error";
       default:
-        return 'default';
+        return "default";
     }
   };
 
@@ -112,7 +116,7 @@ const Tickets = () => {
     const eventDate = new Date(ticket.event?.date);
     const now = new Date();
     const hoursBefore = (eventDate - now) / (1000 * 60 * 60);
-    return ticket.status === 'active' && hoursBefore > 24;
+    return ticket.status === "active" && hoursBefore > 24;
   };
 
   if (isLoading) {
@@ -139,8 +143,12 @@ const Tickets = () => {
         )}
 
         {/* Tabs */}
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-          <Tabs value={activeTab} onChange={handleTabChange} aria-label="ticket status tabs">
+        <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
+            aria-label="ticket status tabs"
+          >
             <Tab label="All Tickets" />
             <Tab label="Active" />
             <Tab label="Used" />
@@ -153,10 +161,16 @@ const Tickets = () => {
           <Grid container spacing={3}>
             {tickets.map((ticket) => (
               <Grid item xs={12} md={6} lg={4} key={ticket._id}>
-                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <Card
+                  sx={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
                   <CardContent sx={{ flexGrow: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Avatar sx={{ mr: 2, bgcolor: 'primary.main' }}>
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                      <Avatar sx={{ mr: 2, bgcolor: "primary.main" }}>
                         <ConfirmationNumber />
                       </Avatar>
                       <Box>
@@ -167,32 +181,57 @@ const Tickets = () => {
                           label={ticket.status}
                           size="small"
                           color={getStatusColor(ticket.status)}
-                          sx={{ textTransform: 'capitalize' }}
+                          sx={{ textTransform: "capitalize" }}
                         />
                       </Box>
                     </Box>
 
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                      <Event sx={{ mr: 1, fontSize: 16, verticalAlign: 'middle' }} />
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ mb: 1 }}
+                    >
+                      <Event
+                        sx={{ mr: 1, fontSize: 16, verticalAlign: "middle" }}
+                      />
                       {formatDate(ticket.event?.date)}
                     </Typography>
 
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                      <AccessTime sx={{ mr: 1, fontSize: 16, verticalAlign: 'middle' }} />
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ mb: 1 }}
+                    >
+                      <AccessTime
+                        sx={{ mr: 1, fontSize: 16, verticalAlign: "middle" }}
+                      />
                       {formatTime(ticket.event?.date)}
                     </Typography>
 
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      <LocationOn sx={{ mr: 1, fontSize: 16, verticalAlign: 'middle' }} />
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ mb: 2 }}
+                    >
+                      <LocationOn
+                        sx={{ mr: 1, fontSize: 16, verticalAlign: "middle" }}
+                      />
                       {ticket.event?.venue?.name}, {ticket.event?.venue?.city}
                     </Typography>
 
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 1,
+                      }}
+                    >
                       <Typography variant="body2">
                         Category: <strong>{ticket.category}</strong>
                       </Typography>
                       <Typography variant="h6" color="primary">
-                        ${ticket.price}
+                        ₹{ticket.price}
                       </Typography>
                     </Box>
 
@@ -208,8 +247,8 @@ const Tickets = () => {
                   </CardContent>
 
                   <Box sx={{ p: 2, pt: 0 }}>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      {ticket.status === 'active' && (
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      {ticket.status === "active" && (
                         <Button
                           size="small"
                           variant="outlined"
@@ -241,15 +280,16 @@ const Tickets = () => {
           </Grid>
         ) : (
           <Box textAlign="center" py={8}>
-            <ConfirmationNumber sx={{ fontSize: 64, color: 'grey.400', mb: 2 }} />
+            <ConfirmationNumber
+              sx={{ fontSize: 64, color: "grey.400", mb: 2 }}
+            />
             <Typography variant="h6" color="text.secondary">
               No tickets found
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {activeTab === 0
                 ? "You haven't purchased any tickets yet."
-                : `No ${getStatusFilter(activeTab)} tickets found.`
-              }
+                : `No ${getStatusFilter(activeTab)} tickets found.`}
             </Typography>
           </Box>
         )}
@@ -259,45 +299,65 @@ const Tickets = () => {
           <DialogTitle>Cancel Ticket</DialogTitle>
           <DialogContent>
             <Typography>
-              Are you sure you want to cancel your ticket for "{selectedTicket?.event?.title}"?
+              Are you sure you want to cancel your ticket for "
+              {selectedTicket?.event?.title}"?
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              This action cannot be undone. Cancellation is only allowed up to 24 hours before the event.
+              This action cannot be undone. Cancellation is only allowed up to
+              24 hours before the event.
             </Typography>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setCancelDialog(false)}>Keep Ticket</Button>
-            <Button onClick={handleCancelConfirm} color="error" variant="contained">
+            <Button
+              onClick={handleCancelConfirm}
+              color="error"
+              variant="contained"
+            >
               Cancel Ticket
             </Button>
           </DialogActions>
         </Dialog>
 
         {/* QR Code Dialog */}
-        <Dialog open={qrDialog} onClose={() => setQrDialog(false)} maxWidth="sm">
+        <Dialog
+          open={qrDialog}
+          onClose={() => setQrDialog(false)}
+          maxWidth="sm"
+        >
           <DialogTitle>Ticket QR Code</DialogTitle>
-          <DialogContent sx={{ textAlign: 'center' }}>
+          <DialogContent sx={{ textAlign: "center" }}>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               Show this QR code at the venue entrance
             </Typography>
 
             {selectedTicket?.qrCode ? (
-              <Box sx={{ p: 2, bgcolor: 'white', borderRadius: 1, display: 'inline-block' }}>
+              <Box
+                sx={{
+                  p: 2,
+                  bgcolor: "white",
+                  borderRadius: 1,
+                  display: "inline-block",
+                }}
+              >
                 {/* QR Code would be rendered here - placeholder for now */}
                 <Box
                   sx={{
                     width: 200,
                     height: 200,
-                    bgcolor: 'grey.100',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '2px solid',
-                    borderColor: 'grey.300',
+                    bgcolor: "grey.100",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "2px solid",
+                    borderColor: "grey.300",
                   }}
                 >
-                  <QrCode sx={{ fontSize: 80, color: 'grey.500' }} />
-                  <Typography variant="caption" sx={{ position: 'absolute', mt: 10 }}>
+                  <QrCode sx={{ fontSize: 80, color: "grey.500" }} />
+                  <Typography
+                    variant="caption"
+                    sx={{ position: "absolute", mt: 10 }}
+                  >
                     QR Code
                   </Typography>
                 </Box>

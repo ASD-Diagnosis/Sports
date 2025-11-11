@@ -189,7 +189,7 @@ const Home = () => {
                         {event.ticketCategories.map((category) => (
                           <Chip
                             key={category.type}
-                            label={`${category.type}: $${category.price}`}
+                            label={`${category.type}: ₹${category.price}`}
                             size="small"
                             variant="outlined"
                           />
