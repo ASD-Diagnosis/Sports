@@ -1,11 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = "https://sports-96de.onrender.com";
 
 // Get user tickets
 export const getUserTickets = createAsyncThunk(
-  'tickets/getUserTickets',
+  "tickets/getUserTickets",
   async (params = {}, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.token;
@@ -16,7 +16,10 @@ export const getUserTickets = createAsyncThunk(
       };
 
       const queryString = new URLSearchParams(params).toString();
-      const response = await axios.get(`${API_URL}/tickets?${queryString}`, config);
+      const response = await axios.get(
+        `${API_URL}/tickets?${queryString}`,
+        config
+      );
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -27,7 +30,7 @@ export const getUserTickets = createAsyncThunk(
 
 // Get single ticket
 export const getTicket = createAsyncThunk(
-  'tickets/getTicket',
+  "tickets/getTicket",
   async (id, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.token;
@@ -48,7 +51,7 @@ export const getTicket = createAsyncThunk(
 
 // Purchase ticket
 export const purchaseTicket = createAsyncThunk(
-  'tickets/purchaseTicket',
+  "tickets/purchaseTicket",
   async (ticketData, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.token;
@@ -58,7 +61,11 @@ export const purchaseTicket = createAsyncThunk(
         },
       };
 
-      const response = await axios.post(`${API_URL}/tickets`, ticketData, config);
+      const response = await axios.post(
+        `${API_URL}/tickets`,
+        ticketData,
+        config
+      );
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -69,7 +76,7 @@ export const purchaseTicket = createAsyncThunk(
 
 // Cancel ticket
 export const cancelTicket = createAsyncThunk(
-  'tickets/cancelTicket',
+  "tickets/cancelTicket",
   async (id, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.token;
@@ -79,7 +86,11 @@ export const cancelTicket = createAsyncThunk(
         },
       };
 
-      const response = await axios.put(`${API_URL}/tickets/${id}/cancel`, {}, config);
+      const response = await axios.put(
+        `${API_URL}/tickets/${id}/cancel`,
+        {},
+        config
+      );
       return { id, message: response.data.message };
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -90,7 +101,7 @@ export const cancelTicket = createAsyncThunk(
 
 // Validate ticket (Admin only)
 export const validateTicket = createAsyncThunk(
-  'tickets/validateTicket',
+  "tickets/validateTicket",
   async (qrCode, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.token;
@@ -100,7 +111,11 @@ export const validateTicket = createAsyncThunk(
         },
       };
 
-      const response = await axios.post(`${API_URL}/tickets/validate`, { qrCode }, config);
+      const response = await axios.post(
+        `${API_URL}/tickets/validate`,
+        { qrCode },
+        config
+      );
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -110,7 +125,7 @@ export const validateTicket = createAsyncThunk(
 );
 
 const ticketSlice = createSlice({
-  name: 'tickets',
+  name: "tickets",
   initialState: {
     tickets: [],
     currentTicket: null,
@@ -118,7 +133,7 @@ const ticketSlice = createSlice({
     isLoading: false,
     isError: false,
     isSuccess: false,
-    message: '',
+    message: "",
     pagination: {
       page: 1,
       limit: 10,
@@ -131,7 +146,7 @@ const ticketSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
-      state.message = '';
+      state.message = "";
     },
     clearCurrentTicket: (state) => {
       state.currentTicket = null;
@@ -200,9 +215,11 @@ const ticketSlice = createSlice({
         state.isSuccess = true;
         state.message = action.payload.message;
         // Update ticket status in the list
-        const index = state.tickets.findIndex(ticket => ticket._id === action.payload.id);
+        const index = state.tickets.findIndex(
+          (ticket) => ticket._id === action.payload.id
+        );
         if (index !== -1) {
-          state.tickets[index].status = 'cancelled';
+          state.tickets[index].status = "cancelled";
         }
       })
       .addCase(cancelTicket.rejected, (state, action) => {
@@ -228,5 +245,6 @@ const ticketSlice = createSlice({
   },
 });
 
-export const { reset, clearCurrentTicket, clearValidationResult } = ticketSlice.actions;
+export const { reset, clearCurrentTicket, clearValidationResult } =
+  ticketSlice.actions;
 export default ticketSlice.reducer;
