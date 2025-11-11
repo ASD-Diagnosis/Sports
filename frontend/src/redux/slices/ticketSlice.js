@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "https://sports-96de.onrender.com";
+const API_URL = "https://sports-96de.onrender.com/api";
 
 // Get user tickets
 export const getUserTickets = createAsyncThunk(
