@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Container,
   Paper,
@@ -9,14 +9,14 @@ import {
   Button,
   Grid,
   Avatar,
-  Divider,
   Alert,
   Card,
   CardContent,
-  Chip,
   InputAdornment,
   IconButton,
-} from '@mui/material';
+  CircularProgress,
+} from "@mui/material";
+import { Link } from "react-router-dom";
 import {
   Person,
   Email,
@@ -24,10 +24,14 @@ import {
   Lock,
   Visibility,
   VisibilityOff,
-  Star,
   Loyalty,
-} from '@mui/icons-material';
-import { getProfile, updateProfile, changePassword, reset } from '../redux/slices/authSlice';
+} from "@mui/icons-material";
+import {
+  getProfile,
+  updateProfile,
+  changePassword,
+  reset,
+} from "../redux/slices/authSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -36,15 +40,15 @@ const Profile = () => {
   );
 
   const [profileData, setProfileData] = useState({
-    name: '',
-    email: '',
-    phone: '',
+    name: "",
+    email: "",
+    phone: "",
   });
 
   const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const [showPasswords, setShowPasswords] = useState({
@@ -53,22 +57,25 @@ const Profile = () => {
     confirm: false,
   });
 
-  const [activeTab, setActiveTab] = useState('profile');
+  const [activeTab, setActiveTab] = useState("profile");
 
   useEffect(() => {
-    dispatch(getProfile());
+    // Only fetch profile if we don't already have it and not currently loading.
+    if (!user && !isLoading) {
+      dispatch(getProfile());
+    }
 
     return () => {
       dispatch(reset());
     };
-  }, [dispatch]);
+  }, [dispatch, user, isLoading]);
 
   useEffect(() => {
     if (user) {
       setProfileData({
-        name: user.name || '',
-        email: user.email || '',
-        phone: user.phone || '',
+        name: user.name || "",
+        email: user.email || "",
+        phone: user.phone || "",
       });
     }
   }, [user]);
@@ -99,17 +106,19 @@ const Profile = () => {
       return;
     }
 
-    dispatch(changePassword({
-      currentPassword: passwordData.currentPassword,
-      newPassword: passwordData.newPassword,
-    }));
+    dispatch(
+      changePassword({
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword,
+      })
+    );
 
     // Clear password fields on success
     if (isSuccess) {
       setPasswordData({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
       });
     }
   };
@@ -123,24 +132,50 @@ const Profile = () => {
 
   const getLoyaltyTierColor = (tier) => {
     switch (tier) {
-      case 'bronze':
-        return '#CD7F32';
-      case 'silver':
-        return '#C0C0C0';
-      case 'gold':
-        return '#FFD700';
-      case 'platinum':
-        return '#E5E4E2';
+      case "bronze":
+        return "#CD7F32";
+      case "silver":
+        return "#C0C0C0";
+      case "gold":
+        return "#FFD700";
+      case "platinum":
+        return "#E5E4E2";
       default:
-        return '#1976d2';
+        return "#1976d2";
     }
   };
+
+  // Show loading / error states clearly before rendering profile
+  if (isLoading) {
+    return (
+      <Container maxWidth="md">
+        <Box display="flex" justifyContent="center" py={8}>
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Container maxWidth="md">
+        <Box py={8} textAlign="center">
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {message || "Failed to load profile."}
+          </Alert>
+          <Button variant="contained" component={Link} to="/login">
+            Go to Login
+          </Button>
+        </Box>
+      </Container>
+    );
+  }
 
   if (!user) {
     return (
       <Container maxWidth="md">
         <Box display="flex" justifyContent="center" py={8}>
-          <Typography>Loading profile...</Typography>
+          <Typography>No profile data available.</Typography>
         </Box>
       </Container>
     );
@@ -156,14 +191,24 @@ const Profile = () => {
         {/* Loyalty Status */}
         <Card sx={{ mb: 4 }}>
           <CardContent>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Avatar sx={{ mr: 2, bgcolor: getLoyaltyTierColor(user.loyaltyTier) }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Avatar
+                  sx={{ mr: 2, bgcolor: getLoyaltyTierColor(user.loyaltyTier) }}
+                >
                   <Loyalty />
                 </Avatar>
                 <Box>
                   <Typography variant="h6">
-                    {user.loyaltyTier?.charAt(0).toUpperCase() + user.loyaltyTier?.slice(1)} Member
+                    {user.loyaltyTier?.charAt(0).toUpperCase() +
+                      user.loyaltyTier?.slice(1)}{" "}
+                    Member
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Loyalty Program
@@ -183,24 +228,24 @@ const Profile = () => {
         </Card>
 
         {/* Navigation Tabs */}
-        <Box sx={{ display: 'flex', mb: 3 }}>
+        <Box sx={{ display: "flex", mb: 3 }}>
           <Button
-            variant={activeTab === 'profile' ? 'contained' : 'outlined'}
-            onClick={() => setActiveTab('profile')}
+            variant={activeTab === "profile" ? "contained" : "outlined"}
+            onClick={() => setActiveTab("profile")}
             sx={{ mr: 1 }}
           >
             Profile Information
           </Button>
           <Button
-            variant={activeTab === 'password' ? 'contained' : 'outlined'}
-            onClick={() => setActiveTab('password')}
+            variant={activeTab === "password" ? "contained" : "outlined"}
+            onClick={() => setActiveTab("password")}
           >
             Change Password
           </Button>
         </Box>
 
         {/* Profile Information Tab */}
-        {activeTab === 'profile' && (
+        {activeTab === "profile" && (
           <Paper sx={{ p: 4 }}>
             <Typography variant="h5" gutterBottom>
               Profile Information
@@ -285,12 +330,8 @@ const Profile = () => {
               </Grid>
 
               <Box sx={{ mt: 3 }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Updating...' : 'Update Profile'}
+                <Button type="submit" variant="contained" disabled={isLoading}>
+                  {isLoading ? "Updating..." : "Update Profile"}
                 </Button>
               </Box>
             </Box>
@@ -298,7 +339,7 @@ const Profile = () => {
         )}
 
         {/* Change Password Tab */}
-        {activeTab === 'password' && (
+        {activeTab === "password" && (
           <Paper sx={{ p: 4 }}>
             <Typography variant="h5" gutterBottom>
               Change Password
@@ -316,14 +357,18 @@ const Profile = () => {
               </Alert>
             )}
 
-            <Box component="form" onSubmit={handlePasswordSubmit} sx={{ mt: 2 }}>
+            <Box
+              component="form"
+              onSubmit={handlePasswordSubmit}
+              sx={{ mt: 2 }}
+            >
               <Grid container spacing={3}>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label="Current Password"
                     name="currentPassword"
-                    type={showPasswords.current ? 'text' : 'password'}
+                    type={showPasswords.current ? "text" : "password"}
                     value={passwordData.currentPassword}
                     onChange={handlePasswordChange}
                     InputProps={{
@@ -335,10 +380,14 @@ const Profile = () => {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            onClick={() => togglePasswordVisibility('current')}
+                            onClick={() => togglePasswordVisibility("current")}
                             edge="end"
                           >
-                            {showPasswords.current ? <VisibilityOff /> : <Visibility />}
+                            {showPasswords.current ? (
+                              <VisibilityOff />
+                            ) : (
+                              <Visibility />
+                            )}
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -351,7 +400,7 @@ const Profile = () => {
                     fullWidth
                     label="New Password"
                     name="newPassword"
-                    type={showPasswords.new ? 'text' : 'password'}
+                    type={showPasswords.new ? "text" : "password"}
                     value={passwordData.newPassword}
                     onChange={handlePasswordChange}
                     InputProps={{
@@ -363,10 +412,14 @@ const Profile = () => {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            onClick={() => togglePasswordVisibility('new')}
+                            onClick={() => togglePasswordVisibility("new")}
                             edge="end"
                           >
-                            {showPasswords.new ? <VisibilityOff /> : <Visibility />}
+                            {showPasswords.new ? (
+                              <VisibilityOff />
+                            ) : (
+                              <Visibility />
+                            )}
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -379,14 +432,18 @@ const Profile = () => {
                     fullWidth
                     label="Confirm New Password"
                     name="confirmPassword"
-                    type={showPasswords.confirm ? 'text' : 'password'}
+                    type={showPasswords.confirm ? "text" : "password"}
                     value={passwordData.confirmPassword}
                     onChange={handlePasswordChange}
-                    error={passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword}
+                    error={
+                      passwordData.confirmPassword &&
+                      passwordData.newPassword !== passwordData.confirmPassword
+                    }
                     helperText={
-                      passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword
-                        ? 'Passwords do not match'
-                        : ''
+                      passwordData.confirmPassword &&
+                      passwordData.newPassword !== passwordData.confirmPassword
+                        ? "Passwords do not match"
+                        : ""
                     }
                     InputProps={{
                       startAdornment: (
@@ -397,10 +454,14 @@ const Profile = () => {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            onClick={() => togglePasswordVisibility('confirm')}
+                            onClick={() => togglePasswordVisibility("confirm")}
                             edge="end"
                           >
-                            {showPasswords.confirm ? <VisibilityOff /> : <Visibility />}
+                            {showPasswords.confirm ? (
+                              <VisibilityOff />
+                            ) : (
+                              <Visibility />
+                            )}
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -413,9 +474,12 @@ const Profile = () => {
                 <Button
                   type="submit"
                   variant="contained"
-                  disabled={isLoading || passwordData.newPassword !== passwordData.confirmPassword}
+                  disabled={
+                    isLoading ||
+                    passwordData.newPassword !== passwordData.confirmPassword
+                  }
                 >
-                  {isLoading ? 'Changing...' : 'Change Password'}
+                  {isLoading ? "Changing..." : "Change Password"}
                 </Button>
               </Box>
             </Box>

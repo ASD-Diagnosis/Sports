@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Container,
   Paper,
@@ -11,8 +11,7 @@ import {
   Alert,
   InputAdornment,
   IconButton,
-  Grid,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Visibility,
   VisibilityOff,
@@ -20,20 +19,20 @@ import {
   Lock,
   Person,
   Phone,
-} from '@mui/icons-material';
-import { register, reset } from '../redux/slices/authSlice';
+} from "@mui/icons-material";
+import { register, reset } from "../redux/slices/authSlice";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    phone: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [passwordError, setPasswordError] = useState('');
+  const [passwordError, setPasswordError] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -44,13 +43,16 @@ const Register = () => {
 
   useEffect(() => {
     if (isSuccess && user) {
-      navigate('/');
+      navigate("/");
     }
+  }, [user, isSuccess, navigate]);
 
+  // cleanup on unmount only
+  useEffect(() => {
     return () => {
       dispatch(reset());
     };
-  }, [user, isSuccess, navigate, dispatch]);
+  }, [dispatch]);
 
   const handleChange = (e) => {
     setFormData({
@@ -59,19 +61,19 @@ const Register = () => {
     });
 
     // Clear password error when user starts typing
-    if (e.target.name === 'confirmPassword' || e.target.name === 'password') {
-      setPasswordError('');
+    if (e.target.name === "confirmPassword" || e.target.name === "password") {
+      setPasswordError("");
     }
   };
 
   const validateForm = () => {
     if (formData.password !== formData.confirmPassword) {
-      setPasswordError('Passwords do not match');
+      setPasswordError("Passwords do not match");
       return false;
     }
 
     if (formData.password.length < 6) {
-      setPasswordError('Password must be at least 6 characters long');
+      setPasswordError("Password must be at least 6 characters long");
       return false;
     }
 
@@ -108,19 +110,19 @@ const Register = () => {
       <Box
         sx={{
           marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <Paper
           elevation={3}
           sx={{
             padding: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
           }}
         >
           <Typography component="h1" variant="h4" gutterBottom>
@@ -132,18 +134,22 @@ const Register = () => {
           </Typography>
 
           {isError && (
-            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+            <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
               {message}
             </Alert>
           )}
 
           {passwordError && (
-            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+            <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
               {passwordError}
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ mt: 1, width: "100%" }}
+          >
             <TextField
               margin="normal"
               required
@@ -208,7 +214,7 @@ const Register = () => {
               fullWidth
               name="password"
               label="Password"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               id="password"
               autoComplete="new-password"
               value={formData.password}
@@ -239,7 +245,7 @@ const Register = () => {
               fullWidth
               name="confirmPassword"
               label="Confirm Password"
-              type={showConfirmPassword ? 'text' : 'password'}
+              type={showConfirmPassword ? "text" : "password"}
               id="confirmPassword"
               autoComplete="new-password"
               value={formData.confirmPassword}
@@ -271,14 +277,18 @@ const Register = () => {
               sx={{ mt: 3, mb: 2, py: 1.5 }}
               disabled={isLoading}
             >
-              {isLoading ? 'Creating Account...' : 'Create Account'}
+              {isLoading ? "Creating Account..." : "Create Account"}
             </Button>
 
-            <Box sx={{ textAlign: 'center' }}>
+            <Box sx={{ textAlign: "center" }}>
               <Typography variant="body2">
-                Already have an account?{' '}
-                <Link to="/login" style={{ textDecoration: 'none' }}>
-                  <Typography component="span" color="primary" sx={{ fontWeight: 'bold' }}>
+                Already have an account?{" "}
+                <Link to="/login" style={{ textDecoration: "none" }}>
+                  <Typography
+                    component="span"
+                    color="primary"
+                    sx={{ fontWeight: "bold" }}
+                  >
                     Sign In
                   </Typography>
                 </Link>
