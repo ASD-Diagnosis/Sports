@@ -1,19 +1,19 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = "https://sports-96de.onrender.com/api";
 
 // Get token from localStorage
 const getTokenFromStorage = () => {
-  return localStorage.getItem('token');
+  return localStorage.getItem("token");
 };
 
 // Set token in localStorage
 const setTokenInStorage = (token) => {
   if (token) {
-    localStorage.setItem('token', token);
+    localStorage.setItem("token", token);
   } else {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
   }
 };
 
@@ -24,12 +24,12 @@ const initialState = {
   isLoading: false,
   isError: false,
   isSuccess: false,
-  message: '',
+  message: "",
 };
 
 // Register user
 export const register = createAsyncThunk(
-  'auth/register',
+  "auth/register",
   async (userData, thunkAPI) => {
     try {
       const response = await axios.post(`${API_URL}/auth/register`, userData);
@@ -46,7 +46,7 @@ export const register = createAsyncThunk(
 
 // Login user
 export const login = createAsyncThunk(
-  'auth/login',
+  "auth/login",
   async (userData, thunkAPI) => {
     try {
       const response = await axios.post(`${API_URL}/auth/login`, userData);
@@ -63,7 +63,7 @@ export const login = createAsyncThunk(
 
 // Get user profile
 export const getProfile = createAsyncThunk(
-  'auth/getProfile',
+  "auth/getProfile",
   async (_, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.token;
@@ -84,7 +84,7 @@ export const getProfile = createAsyncThunk(
 
 // Update profile
 export const updateProfile = createAsyncThunk(
-  'auth/updateProfile',
+  "auth/updateProfile",
   async (userData, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.token;
@@ -94,7 +94,11 @@ export const updateProfile = createAsyncThunk(
         },
       };
 
-      const response = await axios.put(`${API_URL}/auth/profile`, userData, config);
+      const response = await axios.put(
+        `${API_URL}/auth/profile`,
+        userData,
+        config
+      );
       return response.data.data.user;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -105,7 +109,7 @@ export const updateProfile = createAsyncThunk(
 
 // Change password
 export const changePassword = createAsyncThunk(
-  'auth/changePassword',
+  "auth/changePassword",
   async (passwordData, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.token;
@@ -115,7 +119,11 @@ export const changePassword = createAsyncThunk(
         },
       };
 
-      const response = await axios.put(`${API_URL}/auth/change-password`, passwordData, config);
+      const response = await axios.put(
+        `${API_URL}/auth/change-password`,
+        passwordData,
+        config
+      );
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -125,23 +133,23 @@ export const changePassword = createAsyncThunk(
 );
 
 // Logout
-export const logout = createAsyncThunk('auth/logout', async () => {
+export const logout = createAsyncThunk("auth/logout", async () => {
   setTokenInStorage(null);
 });
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     reset: (state) => {
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
-      state.message = '';
+      state.message = "";
     },
     clearError: (state) => {
       state.isError = false;
-      state.message = '';
+      state.message = "";
     },
   },
   extraReducers: (builder) => {
@@ -229,7 +237,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = false;
-        state.message = '';
+        state.message = "";
       });
   },
 });
