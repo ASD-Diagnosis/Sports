@@ -11,6 +11,7 @@ import {
   Alert,
   InputAdornment,
   IconButton,
+  MenuItem,
 } from "@mui/material";
 import {
   Visibility,
@@ -29,6 +30,7 @@ const Register = () => {
     password: "",
     confirmPassword: "",
     phone: "",
+    role: "fan",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -86,12 +88,14 @@ const Register = () => {
     if (!validateForm()) {
       return;
     }
+    console.log(e.target.name, e.target.value, formData);
 
     const userData = {
       name: formData.name,
       email: formData.email,
       password: formData.password,
       phone: formData.phone,
+      role: formData.role,
     };
 
     dispatch(register(userData));
@@ -189,6 +193,21 @@ const Register = () => {
                 ),
               }}
             />
+
+            <TextField
+              margin="normal"
+              fullWidth
+              select
+              id="role"
+              label="Account Type"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            >
+              <MenuItem value="fan">Fan</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+            </TextField>
 
             <TextField
               margin="normal"

@@ -21,6 +21,7 @@ import {
   TrendingUp,
 } from "@mui/icons-material";
 import { getEvents } from "../redux/slices/eventSlice";
+import { green, red } from "@mui/material/colors";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -32,29 +33,6 @@ const Home = () => {
     // Get upcoming events for homepage
     dispatch(getEvents({ limit: 6, sort: "date", upcoming: true }));
   }, [dispatch]);
-
-  const features = [
-    {
-      icon: <SportsSoccer fontSize="large" color="primary" />,
-      title: "Multiple Sports",
-      description: "Football, cricket, basketball, and more sports events",
-    },
-    {
-      icon: <ConfirmationNumber fontSize="large" color="primary" />,
-      title: "Easy Booking",
-      description: "Simple and secure ticket purchasing process",
-    },
-    {
-      icon: <Star fontSize="large" color="primary" />,
-      title: "VIP Experience",
-      description: "Premium seating and exclusive access options",
-    },
-    {
-      icon: <TrendingUp fontSize="large" color="primary" />,
-      title: "Loyalty Rewards",
-      description: "Earn points and get discounts on future purchases",
-    },
-  ];
 
   return (
     <Box>
@@ -78,6 +56,14 @@ const Home = () => {
           </Typography>
           <Typography variant="h5" component="p" gutterBottom>
             Discover and book tickets for the best sports events in your area
+          </Typography>
+          <Typography
+            variant="h5"
+            component="p"
+            gutterBottom
+            sx={{ color: red[500] }}
+          >
+            If data is not loading, wait for 45 seconds for server to boot up.
           </Typography>
           <Box sx={{ mt: 4 }}>
             <Button

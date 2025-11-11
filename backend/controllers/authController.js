@@ -1,11 +1,11 @@
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
-const { sendEmail, emailTemplates } = require('../utils/emailService');
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const { sendEmail, emailTemplates } = require("../utils/emailService");
 
 // Generate JWT Token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE || '7d'
+    expiresIn: process.env.JWT_EXPIRE || "7d",
   });
 };
 
@@ -14,35 +14,37 @@ const generateToken = (id) => {
 // @access  Public
 const register = async (req, res) => {
   try {
-    const { name, email, password, phone, dateOfBirth, preferences } = req.body;
+    const { name, email, password, phone, dateOfBirth, preferences, role } =
+      req.body;
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'User already exists with this email'
+        message: "User already exists with this email",
       });
     }
 
-    // Create user
+    // Create user (include role if provided)
     const user = await User.create({
       name,
       email,
       password,
       phone,
       dateOfBirth,
-      preferences
+      preferences,
+      role,
     });
 
     // Send welcome email
     try {
       await sendEmail({
         email: user.email,
-        ...emailTemplates.welcome(user)
+        ...emailTemplates.welcome(user),
       });
     } catch (emailError) {
-      console.error('Welcome email failed:', emailError);
+      console.error("Welcome email failed:", emailError);
       // Don't fail registration if email fails
     }
 
@@ -59,16 +61,16 @@ const register = async (req, res) => {
           email: user.email,
           role: user.role,
           loyaltyPoints: user.loyaltyPoints,
-          loyaltyTier: user.loyaltyTier
-        }
-      }
+          loyaltyTier: user.loyaltyTier,
+        },
+      },
     });
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error("Registration error:", error);
     res.status(500).json({
       success: false,
-      message: 'Registration failed',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      message: "Registration failed",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };
@@ -84,16 +86,16 @@ const login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide email and password'
+        message: "Please provide email and password",
       });
     }
 
     // Check for user
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select("+password");
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: "Invalid credentials",
       });
     }
 
@@ -101,7 +103,7 @@ const login = async (req, res) => {
     if (!user.isActive) {
       return res.status(401).json({
         success: false,
-        message: 'Account is deactivated'
+        message: "Account is deactivated",
       });
     }
 
@@ -110,7 +112,7 @@ const login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: "Invalid credentials",
       });
     }
 
@@ -128,16 +130,16 @@ const login = async (req, res) => {
           role: user.role,
           loyaltyPoints: user.loyaltyPoints,
           loyaltyTier: user.loyaltyTier,
-          preferences: user.preferences
-        }
-      }
+          preferences: user.preferences,
+        },
+      },
     });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error("Login error:", error);
     res.status(500).json({
       success: false,
-      message: 'Login failed',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      message: "Login failed",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };
@@ -162,16 +164,16 @@ const getMe = async (req, res) => {
           loyaltyPoints: user.loyaltyPoints,
           loyaltyTier: user.loyaltyTier,
           preferences: user.preferences,
-          lastLogin: user.lastLogin
-        }
-      }
+          lastLogin: user.lastLogin,
+        },
+      },
     });
   } catch (error) {
-    console.error('Get me error:', error);
+    console.error("Get me error:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to get user data',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      message: "Failed to get user data",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };
@@ -185,17 +187,17 @@ const updateProfile = async (req, res) => {
       name: req.body.name,
       phone: req.body.phone,
       dateOfBirth: req.body.dateOfBirth,
-      preferences: req.body.preferences
+      preferences: req.body.preferences,
     };
 
     // Remove undefined fields
-    Object.keys(fieldsToUpdate).forEach(key =>
-      fieldsToUpdate[key] === undefined && delete fieldsToUpdate[key]
+    Object.keys(fieldsToUpdate).forEach(
+      (key) => fieldsToUpdate[key] === undefined && delete fieldsToUpdate[key]
     );
 
     const user = await User.findByIdAndUpdate(req.user._id, fieldsToUpdate, {
       new: true,
-      runValidators: true
+      runValidators: true,
     });
 
     res.status(200).json({
@@ -210,16 +212,16 @@ const updateProfile = async (req, res) => {
           dateOfBirth: user.dateOfBirth,
           loyaltyPoints: user.loyaltyPoints,
           loyaltyTier: user.loyaltyTier,
-          preferences: user.preferences
-        }
-      }
+          preferences: user.preferences,
+        },
+      },
     });
   } catch (error) {
-    console.error('Update profile error:', error);
+    console.error("Update profile error:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update profile',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      message: "Failed to update profile",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };
@@ -232,13 +234,13 @@ const changePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
 
     // Get user with password
-    const user = await User.findById(req.user._id).select('+password');
+    const user = await User.findById(req.user._id).select("+password");
 
     // Check current password
     if (!(await user.comparePassword(currentPassword))) {
       return res.status(400).json({
         success: false,
-        message: 'Current password is incorrect'
+        message: "Current password is incorrect",
       });
     }
 
@@ -248,14 +250,14 @@ const changePassword = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Password updated successfully'
+      message: "Password updated successfully",
     });
   } catch (error) {
-    console.error('Change password error:', error);
+    console.error("Change password error:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to change password',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      message: "Failed to change password",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };
@@ -265,5 +267,5 @@ module.exports = {
   login,
   getMe,
   updateProfile,
-  changePassword
+  changePassword,
 };
