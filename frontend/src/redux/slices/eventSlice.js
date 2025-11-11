@@ -1,11 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = "https://sports-96de.onrender.com";
 
 // Get events
 export const getEvents = createAsyncThunk(
-  'events/getEvents',
+  "events/getEvents",
   async (params = {}, thunkAPI) => {
     try {
       const queryString = new URLSearchParams(params).toString();
@@ -20,7 +20,7 @@ export const getEvents = createAsyncThunk(
 
 // Get single event
 export const getEvent = createAsyncThunk(
-  'events/getEvent',
+  "events/getEvent",
   async (id, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/events/${id}`);
@@ -34,7 +34,7 @@ export const getEvent = createAsyncThunk(
 
 // Create event (Admin only)
 export const createEvent = createAsyncThunk(
-  'events/createEvent',
+  "events/createEvent",
   async (eventData, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.token;
@@ -55,7 +55,7 @@ export const createEvent = createAsyncThunk(
 
 // Update event (Admin only)
 export const updateEvent = createAsyncThunk(
-  'events/updateEvent',
+  "events/updateEvent",
   async ({ id, eventData }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.token;
@@ -65,7 +65,11 @@ export const updateEvent = createAsyncThunk(
         },
       };
 
-      const response = await axios.put(`${API_URL}/events/${id}`, eventData, config);
+      const response = await axios.put(
+        `${API_URL}/events/${id}`,
+        eventData,
+        config
+      );
       return response.data.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -76,7 +80,7 @@ export const updateEvent = createAsyncThunk(
 
 // Delete event (Admin only)
 export const deleteEvent = createAsyncThunk(
-  'events/deleteEvent',
+  "events/deleteEvent",
   async (id, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.token;
@@ -97,7 +101,7 @@ export const deleteEvent = createAsyncThunk(
 
 // Get event stats (Admin only)
 export const getEventStats = createAsyncThunk(
-  'events/getEventStats',
+  "events/getEventStats",
   async (id, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.token;
@@ -117,7 +121,7 @@ export const getEventStats = createAsyncThunk(
 );
 
 const eventSlice = createSlice({
-  name: 'events',
+  name: "events",
   initialState: {
     events: [],
     currentEvent: null,
@@ -125,7 +129,7 @@ const eventSlice = createSlice({
     isLoading: false,
     isError: false,
     isSuccess: false,
-    message: '',
+    message: "",
     pagination: {
       page: 1,
       limit: 10,
@@ -138,7 +142,7 @@ const eventSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
-      state.message = '';
+      state.message = "";
     },
     clearCurrentEvent: (state) => {
       state.currentEvent = null;
@@ -201,11 +205,16 @@ const eventSlice = createSlice({
       .addCase(updateEvent.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        const index = state.events.findIndex(event => event._id === action.payload._id);
+        const index = state.events.findIndex(
+          (event) => event._id === action.payload._id
+        );
         if (index !== -1) {
           state.events[index] = action.payload;
         }
-        if (state.currentEvent && state.currentEvent._id === action.payload._id) {
+        if (
+          state.currentEvent &&
+          state.currentEvent._id === action.payload._id
+        ) {
           state.currentEvent = action.payload;
         }
       })
@@ -221,7 +230,9 @@ const eventSlice = createSlice({
       .addCase(deleteEvent.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.events = state.events.filter(event => event._id !== action.payload);
+        state.events = state.events.filter(
+          (event) => event._id !== action.payload
+        );
       })
       .addCase(deleteEvent.rejected, (state, action) => {
         state.isLoading = false;
